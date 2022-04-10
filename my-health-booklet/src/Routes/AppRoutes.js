@@ -19,8 +19,8 @@ function getToken() {
 }
 
 function AppRoutes() {
-    const islog = getToken()
-    const [loggedIN, setloggedIN] = useState(false)
+    const islog = true
+    const [loggedIN, setloggedIN] = useState(true)
     console.log(islog)
 
     if (!islog) {

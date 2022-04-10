@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
+import Profile from '../pages/Profile';
+import Register from '../pages/Register';
 
 function setToken() {
     sessionStorage.setItem('token', JSON.stringify(true));
@@ -45,6 +47,14 @@ function AppRoutes() {
 
             <Route exact path = "/home">
                 <HomePage />
+            </Route>
+
+            <Route exact path = "/newAppointment">
+                <Register />
+            </Route>
+
+            <Route exact path = "/profile">
+                <Profile />
             </Route>
 
         </Router>

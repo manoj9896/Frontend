@@ -7,7 +7,7 @@ export default function AppHeader() {
             <div className="container-fluid justify-content-start">
 
                 <a className="navbar-brand" href="/home">
-                    Navbar
+                    Health Digitalization System
                 </a>
 
                 <div className="" style={{ flex: '1' }}>
@@ -40,7 +40,7 @@ export default function AppHeader() {
                         <li className="nav-item" style={{ marginLeft: 'auto' }}>
                             <a
                                 className="nav-link"
-                                href="#"
+                                href="/profile"
                             >
                                 My Profile
                             </a>

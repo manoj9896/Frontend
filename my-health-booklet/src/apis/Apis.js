@@ -11,3 +11,14 @@ export async function LoginApi(userId,password){
     let res = await axios.get(url,{params})
     return res;
 }
+
+export async function ProfileDetailsApi(){
+
+    let url = backEndServer+"profileDetails"
+    let params = {
+        profileId: sessionStorage.getItem('profileId')
+    }
+    let res = await axios.get(url,{params})
+    return res;
+
+}

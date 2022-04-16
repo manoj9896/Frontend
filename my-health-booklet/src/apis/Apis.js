@@ -104,3 +104,17 @@ export async function UpdatePassword(new_pass) {
     let res = await axios.get(url,{params})
     return res;
 }
+
+export async function AddNewUserApi(user) {
+
+    let url = backEndServer + "addNewUser"
+
+    let params = {
+        name : user.name.trim(), 
+        email : user.email.trim(), 
+        role : user.role.trim()
+    }
+    
+    let res = await axios.get(url,{params})
+    return res;
+}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GetAppointments, GetAppointmentsOfDoctor, GetAppointmentsOfPatient, GetDoctors, ProfileDetailsApi, UpdateAppointment } from '../apis/Apis';
+import ResolveMedicalProblem from '../components/ResolveMedicalProblem';
 
 export default function Appointments() {
 
@@ -9,10 +10,12 @@ export default function Appointments() {
     const [docpAppointments, setDocAppointments] = useState([])
     const [doctors, setDoctors] = useState([])
     const [doc_option, setDocOption] = useState("")
+    const [openModal, setModal] = useState(false)
+
+    const toggleModal = () => setModal(!openModal)
 
     const fnApplyJS = () => {
         let question = document.querySelectorAll(".question");
-        console.log(question)
 
         question.forEach(question => {
             question.addEventListener("click", event => {
@@ -135,6 +138,12 @@ export default function Appointments() {
     return (
         <div className='m-5 text-center'>
 
+            <ResolveMedicalProblem 
+                addPost={openModal} 
+                setaddPost={setModal} 
+                toggleAddPost={toggleModal}
+            />
+
             <h1>Upcoming Appointment</h1>
 
             {
@@ -225,17 +234,19 @@ export default function Appointments() {
                             {
                                 docpAppointments.map((appointment, id) => (
                                     <div className="container" key={id}>
-                                        <div className="question">
+                                        <div className="question d-flex justify-content-between">
                                             {appointment.title}
+                                            <div>
+                                                <button className='btn btn-info' onClick={()=>{
+                                                    toggleModal()
+                                                }}>Close the Issue</button>
+                                            </div>
                                         </div>
                                         <div className="answercont">
                                             <div className="answer">
                                                 <p style={{ fontWeight: 'bold' }}>Name : {appointment.patient.name}</p>
                                                 <p style={{ fontWeight: 'bold' }}>Email : {appointment.patient.email}</p>
                                                 <p style={{ fontWeight: 'bold' }}>Problem : {appointment.desc}</p>
-                                            </div>
-                                            <div className="answer">
-                                                All medical information such as: name, id, Phone number, doctor name, status, disease.
                                             </div>
                                         </div>
                                     </div>

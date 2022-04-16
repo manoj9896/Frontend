@@ -12,7 +12,6 @@ function LoginPage(props) {
     const [password, setpassword] = useState("")
 
     const fnCheckLogin = async () => {
-        console.log(userName, password)
         let res = await LoginApi(userName, password)
         console.log(res)
 

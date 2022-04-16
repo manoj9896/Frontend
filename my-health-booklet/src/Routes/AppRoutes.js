@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
+import MedicalRecord from '../pages/MedicalRecord';
 import Profile from '../pages/Profile';
 import Register from '../pages/Register';
 
@@ -21,8 +22,8 @@ function getToken() {
 }
 
 function AppRoutes() {
-    const islog = true
-    const [loggedIN, setloggedIN] = useState(true)
+    const islog = getToken()
+    const [loggedIN, setloggedIN] = useState(false)
     console.log(islog)
 
     if (!islog) {
@@ -55,6 +56,10 @@ function AppRoutes() {
 
             <Route exact path = "/profile">
                 <Profile />
+            </Route>
+
+            <Route exact path = "/medicalHistory">
+                <MedicalRecord />
             </Route>
 
         </Router>

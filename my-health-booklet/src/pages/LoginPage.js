@@ -24,7 +24,10 @@ function LoginPage(props) {
         let myObj = res.data
 
         sessionStorage.setItem('profileId', myObj.profileId)
-        sessionStorage.setItem("userDetails", myObj)
+        sessionStorage.setItem("name", myObj.name)
+        sessionStorage.setItem("email", myObj.email)
+        sessionStorage.setItem("role", myObj.role)
+        sessionStorage.setItem("user", JSON.stringify(myObj))
         history.replace("/home")
         setloggedIN(true)
         setToken()
@@ -34,6 +37,7 @@ function LoginPage(props) {
     return (
         <div className='main-container'>
             <div className="login-page">
+                <h1 className='text-center' style={{fontWeight:'bold'}}>Health Digitalization System</h1>
                 <div className="login-container">
                     <form className="login-form" onSubmit={(e) => {
                         e.preventDefault()

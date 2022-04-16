@@ -1,6 +1,8 @@
 import React from 'react'
 
 export default function AppHeader() {
+    const role = sessionStorage.getItem("role")
+
     return (
 
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -19,23 +21,42 @@ export default function AppHeader() {
                             </a>
                         </li>
 
-                        <li className="nav-item">
-                            <a
-                                className="nav-link"
-                                href="/newAppointment"
-                            >
-                                Registration
-                            </a>
-                        </li>
+                        {
+                            role === "Patient" && (
+                                <>
+                                    <li className="nav-item">
+                                        <a
+                                            className="nav-link"
+                                            href="/newAppointment"
+                                        >
+                                            Registration
+                                        </a>
+                                    </li>
 
-                        <li className="nav-item">
-                            <a
-                                className="nav-link"
-                                href="/newAppointment"
-                            >
-                                Medical Record
-                            </a>
-                        </li>
+                                    <li className="nav-item">
+                                        <a
+                                            className="nav-link"
+                                            href="/medicalHistory"
+                                        >
+                                            Medical Record
+                                        </a>
+                                    </li>
+                                </>
+                            )
+                        }
+
+                        {
+                            role === "Doctor" && (
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link"
+                                        href="/medicalHistory"
+                                    >
+                                        Student Medical History
+                                    </a>
+                                </li>
+                            )
+                        }
 
                         <li className="nav-item" style={{ marginLeft: 'auto' }}>
                             <a

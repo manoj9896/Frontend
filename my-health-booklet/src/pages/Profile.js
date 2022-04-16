@@ -1,25 +1,26 @@
 import React, { useState ,useEffect} from 'react'
 import { ProfileDetailsApi } from '../apis/Apis'
 import AppHeader from '../components/AppHeader'
+import ChangePassword from '../components/ChangePassword'
 
 function Profile() {
 
     const [editProfile, seteditProfile] = useState(true)
     const [profileDetails, setProfileDetails] = useState({
-        "loginId": "student1",
-        "name": "Abhishek Kumar",
-        "phoneNo": 9876543210,
-        "email": "abc@iitk.ac.in",
-        "department": "EE",
-        "address": "F201 Hall 13",
-        "rollNo": 190456
+        "loginId": "",
+        "name": "",
+        "phoneNo": "",
+        "email": "",
+        "department": "",
+        "address": "",
+        "rollNo": ""
     })
     useEffect(() => {
         fnGetProfileDetails()
     }, [])
 
     const fnGetProfileDetails = async ()=>{
-        let res = await ProfileDetailsApi()
+        let res = await ProfileDetailsApi(sessionStorage.getItem("profileId"))
         console.log(res.data)
         setProfileDetails(res.data)
     }
@@ -184,6 +185,9 @@ function Profile() {
                     </div>
                 )
             }
+
+            <hr />
+            <ChangePassword />
         </>
     )
 }

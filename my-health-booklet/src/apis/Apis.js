@@ -118,3 +118,23 @@ export async function AddNewUserApi(user) {
     let res = await axios.get(url,{params})
     return res;
 }
+
+export async function AddToMedicalRecord(diagnosis,medicines,patientId,problem) {
+
+    let url = backEndServer + "addToMedicalRecord"
+    let date = new Date()
+    date = date.toISOString().slice(0, 19).replace('T', ' ');
+
+    let params = {
+        problem : problem,
+        medicines : medicines,
+        diagnosis : diagnosis,
+        patientId : patientId,
+        doctorId : sessionStorage.getItem("profileId"),
+        date : date
+    }
+    
+    let res = await axios.get(url,{params})
+    return res;
+}
+

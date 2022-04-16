@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { GetAppointments, GetAppointmentsOfDoctor, GetAppointmentsOfPatient, GetDoctors, ProfileDetailsApi, UpdateAppointment } from '../apis/Apis';
+import { AddToMedicalRecord, GetAppointments, GetAppointmentsOfDoctor, GetAppointmentsOfPatient, GetDoctors, ProfileDetailsApi, UpdateAppointment } from '../apis/Apis';
 import ResolveMedicalProblem from '../components/ResolveMedicalProblem';
 
 export default function Appointments() {
@@ -11,6 +11,9 @@ export default function Appointments() {
     const [doctors, setDoctors] = useState([])
     const [doc_option, setDocOption] = useState("")
     const [openModal, setModal] = useState(false)
+    const [patientId, setpatientId] = useState("")
+    const [problem, setproblem] = useState("")
+    const [mr_no, setmr_no] = useState("")
 
     const toggleModal = () => setModal(!openModal)
 
@@ -59,7 +62,7 @@ export default function Appointments() {
         }
         console.log(appointments)
 
-        setPatientAppointments(appointments.reverse())
+        setPatientAppointments(appointments)
     }
 
     const fnGetPatientDetaisl = async (pid) => {
@@ -93,13 +96,14 @@ export default function Appointments() {
         }
         console.log(appointments)
         fnGetDoctors()
-        setRecepAppointments(appointments.reverse())
+        setRecepAppointments(appointments)
     }
 
-    const fnUpdateRegistration = async (num) => {
-        let res = await UpdateAppointment(num, 1, doc_option)
+    const fnUpdateRegistration = async (num,doc_id) => {
+        let res = await UpdateAppointment(num, 1, doc_id)
         console.log(res)
-        fnRecptionistAppointments()
+        
+        window.location.reload()
     }
 
     const fnDoctorAppointments = async () => {
@@ -115,14 +119,15 @@ export default function Appointments() {
                 title: arr[i].subject,
                 desc: arr[i].problem,
                 date: date,
-                patient: await fnGetPatientDetaisl(arr[i].patient_id)
+                patient: await fnGetPatientDetaisl(arr[i].patient_id),
+                mr_no: arr[i].mr_no
             }
             if (arr[i].status === 1)
                 appointments.push(obj)
         }
         console.log("doc appointments", appointments)
 
-        setDocAppointments(appointments.reverse())
+        setDocAppointments(appointments)
     }
 
     useEffect(() => {
@@ -135,13 +140,25 @@ export default function Appointments() {
         }, 1000);
     }, [])
 
+    const fnAddToMedicalRecord = async (diagnosis, medicines) => {
+        let res = await AddToMedicalRecord(diagnosis, medicines, patientId, problem)
+        if (res.data.message) {
+            alert(res.data.message)
+        }
+        let res2 = await UpdateAppointment(mr_no, 2, sessionStorage.getItem("profileId"))
+        console.log(res2)
+        toggleModal()
+        window.location.reload()
+    }
+
     return (
         <div className='m-5 text-center'>
 
-            <ResolveMedicalProblem 
-                addPost={openModal} 
-                setaddPost={setModal} 
+            <ResolveMedicalProblem
+                addPost={openModal}
+                setaddPost={setModal}
                 toggleAddPost={toggleModal}
+                fnAddToMedicalRecord={fnAddToMedicalRecord}
             />
 
             <h1>Upcoming Appointment</h1>
@@ -187,15 +204,15 @@ export default function Appointments() {
                                                 <p style={{ fontWeight: 'bold' }}>Problem : {appointment.desc}</p>
                                             </div>
 
-                                            <div className='mb-3 d-flex justify-content-around'>
-                                                <div>
+                                            <div className='mb-3 row'>
+                                                <label htmlFor="selectDoctor" className="col-sm-4 mt-1">
+                                                    Assign a Doctor
+                                                </label>
+                                                <div className='col-sm-4 '>
                                                     <select
-                                                        onChange={(e) => {
-                                                            setDocOption(e.target.value)
-                                                        }}
+                                                        id="selectDoctor"
                                                         className="form-select"
                                                         aria-label="Default select example">
-                                                        <option defaultValue={2}>Assign a Doctor</option>
                                                         {
                                                             doctors.map((doc, id) => (
                                                                 <option value={doc.doctor_id} key={id}>{doc.doctor_name}</option>
@@ -203,20 +220,15 @@ export default function Appointments() {
                                                         }
                                                     </select>
                                                 </div>
-                                                {
-                                                    doc_option === ""
-                                                        ?
-                                                        <button className='btn btn-primary' disabled>Assign Doctor</button>
-                                                        :
-                                                        <button
-                                                            onClick={() => {
-                                                                fnUpdateRegistration(appointment.mr_no)
-                                                                setDocOption("")
-                                                            }}
-                                                            className='btn btn-primary'
-                                                        >Assign Doctor</button>
-
-                                                }
+                                                <button
+                                                    onClick={() => {
+                                                        let selectDoctor = document.getElementById("selectDoctor")
+                                                        let doc_id = selectDoctor.value
+                                                        console.log(doc_id)
+                                                        fnUpdateRegistration(appointment.mr_no,doc_id)                                        
+                                                    }}
+                                                    className='btn btn-primary col-sm-4'
+                                                >Assign Doctor</button>
                                             </div>
                                         </div>
                                     </div>
@@ -237,7 +249,10 @@ export default function Appointments() {
                                         <div className="question d-flex justify-content-between">
                                             {appointment.title}
                                             <div>
-                                                <button className='btn btn-info' onClick={()=>{
+                                                <button className='btn btn-info' onClick={() => {
+                                                    setpatientId(appointment.patient.profileId)
+                                                    setproblem(appointment.problem)
+                                                    setmr_no(appointment.mr_no)
                                                     toggleModal()
                                                 }}>Close the Issue</button>
                                             </div>

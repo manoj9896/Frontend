@@ -12,7 +12,7 @@ import {
 
 export default function ResolveMedicalProblem(props) {
 
-    const { addPost, setaddPost, toggleAddPost } = props
+    const { addPost, setaddPost, toggleAddPost,fnAddToMedicalRecord } = props
 
     const [medicines, setMedicines] = useState("")
     const [diagnosis, setDiagnosis] = useState("")
@@ -41,6 +41,7 @@ export default function ResolveMedicalProblem(props) {
                                 onChange={(e)=>{
                                     setDiagnosis(e.target.value)
                                 }}
+                                required
                             />
                         </div>
 
@@ -56,9 +57,9 @@ export default function ResolveMedicalProblem(props) {
                                 onChange={(e)=>{
                                     setMedicines(e.target.value)
                                 }}
+                                required
                             />
                         </div>
-
 
                     </MDBModalBody>
 
@@ -66,7 +67,13 @@ export default function ResolveMedicalProblem(props) {
                         <button className='btn btn-secondary' onClick={toggleAddPost}>
                             Close
                         </button>
-                        <button className='btn btn-success'>Add to Record</button>
+
+                        <button className='btn btn-success' onClick={()=>{
+                            fnAddToMedicalRecord(diagnosis,medicines)
+                            setDiagnosis('')
+                            setMedicines('')
+                        }}>Add to Record</button>
+
                     </MDBModalFooter>
                 </MDBModalContent>
             </MDBModalDialog>

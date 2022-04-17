@@ -24,7 +24,7 @@ function AddNewUser() {
     <div className='mt-5' style={{ width: "60%", margin: 'auto' }}>
       <h1 className='text-center'>Add New User</h1>
       <div>
-        <form onSubmit={(e)=>{
+        <form onSubmit={(e) => {
           e.preventDefault()
           console.log(newUser)
           fnAddUser()
@@ -39,6 +39,7 @@ function AddNewUser() {
                 <input
                   type="text"
                   name="name"
+                  value={newUser.name}
                   className="form-control"
                   id="name"
                   placeholder="Name"
@@ -46,7 +47,7 @@ function AddNewUser() {
                   onChange={(e) => {
                     setNewUser({ ...newUser, [e.target.name]: e.target.value })
                   }}
-                  
+
                 />
               </div>
             </div>
@@ -59,6 +60,7 @@ function AddNewUser() {
                 <input
                   type="email"
                   name="email"
+                  value={newUser.email}
                   className="form-control"
                   id="email"
                   placeholder="Email"
@@ -77,6 +79,7 @@ function AddNewUser() {
               </label>
               <div className="col-sm-8">
                 <select
+                  value={newUser.role}
                   onChange={(e) => {
                     console.log(e.target.value)
                     setNewUser({ ...newUser, [e.target.name]: e.target.value })
@@ -88,7 +91,7 @@ function AddNewUser() {
                 >
                   <option value={"Patient"}> Patient </option>
                   <option value={"Doctor"}> Doctor </option>
-                  <option value={"Receptionist"}> Receptionist </option>                 
+                  <option value={"Receptionist"}> Receptionist </option>
 
                 </select>
               </div>

@@ -49,7 +49,7 @@ export default function Register() {
             <input type="text" placeholder="Title" id="form3Example3" className="form-control" value={subject}
               onChange={(e) => {
                 setSubject(e.target.value)
-              }} />
+              }} required/>
           </div>
 
           <div className="form-outline mb-4">
@@ -64,6 +64,7 @@ export default function Register() {
               onChange={(e) => {
                 setProblem(e.target.value)
               }}
+              required
             />
           </div>
 

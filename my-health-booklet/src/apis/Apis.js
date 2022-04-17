@@ -33,7 +33,8 @@ export async function AddAppointmentApi(problem,subject) {
         problem: problem,
         status: 0,
         date: date,
-        subject : subject
+        subject : subject,
+        email: sessionStorage.getItem("email")
     }
     let res = await axios.get(url, { params })
     return res;

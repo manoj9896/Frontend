@@ -123,7 +123,7 @@ export default function Appointments() {
 
         let doc = await GetDoctorsById(doc_id)
 
-        let message = `Hi,\n\n Your appointment have been confirmed with details given below : \n\nName : ${doc.data.doctor_name}\nSpecialist : ${doc.data.specialist}\nTime : {doc.data.time}\n\nThanks and Regards,\nHealth Center\nIITK`
+        let message = `Hi,\n\n Your appointment have been confirmed with details given below : \n\nName : ${doc.data.doctor_name}\nSpecialist : ${doc.data.specialist}\nTime : ${doc.data.time}\n\nThanks and Regards,\nHealth Center\nIITK`
         let res2 = await SendNotification(message,email)
         console.log(res2)
         window.location.reload()
@@ -176,7 +176,7 @@ export default function Appointments() {
         console.log(res2)
         console.log(res3)
         toggleModal()
-        // window.location.reload()
+        window.location.reload()
     }
 
     return (
@@ -276,6 +276,7 @@ export default function Appointments() {
                                     <div className="container" key={id}>
                                         <div className="question d-flex justify-content-between">
                                             {appointment.title}
+                                            
                                             <div>
                                                 <button className='btn btn-info' onClick={() => {
                                                     setpatientId(appointment.patient.profileId)
@@ -285,6 +286,7 @@ export default function Appointments() {
                                                     toggleModal()
                                                 }}>Close the Issue</button>
                                             </div>
+
                                         </div>
                                         <div className="answercont">
                                             <div className="answer">

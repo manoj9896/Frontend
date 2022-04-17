@@ -24,6 +24,10 @@ function Profile() {
         console.log(res.data)
         setProfileDetails(res.data)
     }
+
+    const fnUpdateProfile = async () => {
+        
+    }
     
     return (
         <>

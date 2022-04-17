@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { AddToMedicalRecord, GetAppointments, GetAppointmentsOfDoctor, GetAppointmentsOfPatient, GetDoctors, ProfileDetailsApi, UpdateAppointment } from '../apis/Apis';
+import { AddToMedicalRecord, GetAppointments, GetAppointmentsOfDoctor, GetAppointmentsOfPatient, GetDoctors, GetDoctorsById, ProfileDetailsApi, SendNotification, UpdateAppointment } from '../apis/Apis';
 import ResolveMedicalProblem from '../components/ResolveMedicalProblem';
 
 export default function Appointments() {
@@ -9,7 +9,6 @@ export default function Appointments() {
     const [recepAppointments, setRecepAppointments] = useState([])
     const [docpAppointments, setDocAppointments] = useState([])
     const [doctors, setDoctors] = useState([])
-    const [doc_option, setDocOption] = useState("")
     const [openModal, setModal] = useState(false)
     const [patientId, setpatientId] = useState("")
     const [problem, setproblem] = useState("")
@@ -51,11 +50,30 @@ export default function Appointments() {
 
         for (let i = 0; i < arr.length; i++) {
             let date = new Date(arr[i].date)
+
+            let mess = <>
+                <h3>At the Receptionist Desk Currently !!</h3>
+                <p style={{ fontWeight: 'bold' }}>Medical Issue : {arr[i].problem}</p>
+            </>
+
+            if (arr[i].status === 1) {
+                let doc = await GetDoctorsById(arr[i].doctor_id)
+
+                mess = (
+                    <>
+                        <h3>You have been appointed a Doctor</h3>
+                        <p style={{ fontWeight: 'bold' }}>Name : {doc.data.doctor_name}</p>
+                        <p style={{ fontWeight: 'bold' }}>Specialist : {doc.data.specialist}</p>
+                        <p style={{ fontWeight: 'bold' }}>Time : {doc.data.time}</p>
+                        <p style={{ fontWeight: 'bold' }}>Medical Issue : {arr[i].problem}</p>
+                    </>
+                )
+            }
             date = date.toISOString().slice(0, 19).replace('T', ' ');
             let obj = {
                 title: arr[i].subject,
-                desc: arr[i].problem,
-                date: date
+                date: date,
+                mess: mess
             }
             if (arr[i].status !== 2)
                 appointments.push(obj)
@@ -99,10 +117,15 @@ export default function Appointments() {
         setRecepAppointments(appointments)
     }
 
-    const fnUpdateRegistration = async (num,doc_id) => {
+    const fnUpdateRegistration = async (num, doc_id,email) => {
         let res = await UpdateAppointment(num, 1, doc_id)
         console.log(res)
-        
+
+        let doc = await GetDoctorsById(doc_id)
+
+        let message = `Hi,\n\n Your appointment have been confirmed with details given below : \n\nName : ${doc.data.doctor_name}\nSpecialist : ${doc.data.specialist}\nTime : {doc.data.time}\n\nThanks and Regards,\nHealth Center\nIITK`
+        let res2 = await SendNotification(message,email)
+        console.log(res2)
         window.location.reload()
     }
 
@@ -120,7 +143,7 @@ export default function Appointments() {
                 desc: arr[i].problem,
                 date: date,
                 patient: await fnGetPatientDetaisl(arr[i].patient_id),
-                mr_no: arr[i].mr_no
+                mr_no: arr[i].mr_no,
             }
             if (arr[i].status === 1)
                 appointments.push(obj)
@@ -146,9 +169,14 @@ export default function Appointments() {
             alert(res.data.message)
         }
         let res2 = await UpdateAppointment(mr_no, 2, sessionStorage.getItem("profileId"))
+        let patient = await fnGetPatientDetaisl(patientId)
+
+        let message = `Hi,\n\n Your appointment have been closed.\n\nThanks and Regards,\nHealth Center\nIITK`
+        let res3 = await SendNotification(message,patient.email)
         console.log(res2)
+        console.log(res3)
         toggleModal()
-        window.location.reload()
+        // window.location.reload()
     }
 
     return (
@@ -176,7 +204,7 @@ export default function Appointments() {
                                         </div>
                                         <div className="answercont">
                                             <div className="answer">
-                                                {appointment.desc}
+                                                {appointment.mess}
                                             </div>
                                         </div>
                                     </div>
@@ -225,7 +253,7 @@ export default function Appointments() {
                                                         let selectDoctor = document.getElementById("selectDoctor")
                                                         let doc_id = selectDoctor.value
                                                         console.log(doc_id)
-                                                        fnUpdateRegistration(appointment.mr_no,doc_id)                                        
+                                                        fnUpdateRegistration(appointment.mr_no, doc_id,appointment.patient.email)
                                                     }}
                                                     className='btn btn-primary col-sm-4'
                                                 >Assign Doctor</button>
@@ -251,7 +279,8 @@ export default function Appointments() {
                                             <div>
                                                 <button className='btn btn-info' onClick={() => {
                                                     setpatientId(appointment.patient.profileId)
-                                                    setproblem(appointment.problem)
+                                                    console.log(appointment.desc)
+                                                    setproblem(appointment.desc)
                                                     setmr_no(appointment.mr_no)
                                                     toggleModal()
                                                 }}>Close the Issue</button>

@@ -50,7 +50,7 @@ export default function AppHeader() {
                                 <li className="nav-item">
                                     <a
                                         className="nav-link"
-                                        href="/medicalHistory"
+                                        href="/studentMedicalHistory"
                                     >
                                         Student Medical History
                                     </a>

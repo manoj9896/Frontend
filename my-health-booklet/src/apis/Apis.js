@@ -77,6 +77,51 @@ export async function GetDoctors() {
     return res;
 }
 
+export async function MedicalRecordById(patient_id) {
+
+    let url = backEndServer + "getMedicalRecordById"
+
+    let params = {
+        patientId : patient_id
+    }
+    let res = await axios.get(url,{params})
+    return res;
+}
+
+export async function GetDoctorsById(doc_id) {
+
+    let url = backEndServer + "getDoctorsById"
+
+    let params = {
+        doctorId : doc_id
+    }
+    let res = await axios.get(url,{params})
+    return res;
+}
+
+export async function GetPatientDetails(userId) {
+
+    let url = backEndServer + "getProfileId"
+
+    let params = {
+        userId : userId
+    }
+    let res = await axios.get(url,{params})
+    return res;
+}
+
+export async function SendNotification(message,email) {
+
+    let url = backEndServer + "sendNotificationOfAppointment"
+
+    let params = {
+        message:message,
+        email : email
+    }
+    let res = await axios.get(url,{params})
+    return res;
+}
+
 export async function UpdateAppointment(mrNo,status,doctorId) {
 
     let url = backEndServer + "updateAppointment"
